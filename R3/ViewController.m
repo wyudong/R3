@@ -7,21 +7,44 @@
 //
 
 #import "ViewController.h"
+@import CoreMotion;
 
 @interface ViewController ()
+
+@property (nonatomic, strong) CMMotionManager *motionManager;
 
 @end
 
 @implementation ViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-}
+static double initialAttitudeRoll;
+static double initialAttitudePitch;
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    // Motion manager
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    self.motionManager = [[CMMotionManager alloc] init];
+    
+    
+    if (self.motionManager.deviceMotionAvailable) {
+        self.motionManager.deviceMotionUpdateInterval = 1.0 / 30.0;
+        [self.motionManager startDeviceMotionUpdatesToQueue:queue
+                                                withHandler:^(CMDeviceMotion * _Nullable deviceMotion, NSError * _Nullable error) {
+            // Motion process
+                                                    static dispatch_once_t once;
+                                                    dispatch_once(&once, ^{
+                                                        initialAttitudeRoll = deviceMotion.attitude.roll;
+                                                        initialAttitudePitch = deviceMotion.attitude.pitch;
+                                                    });
+                                                    
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                // Update UI
+            }];
+        }];
+    }
 }
 
 @end
