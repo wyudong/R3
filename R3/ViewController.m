@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+@import SceneKit;
 @import CoreMotion;
 
 @interface ViewController ()
@@ -17,12 +18,35 @@
 
 @implementation ViewController
 
-static double initialAttitudeRoll;
-static double initialAttitudePitch;
+static CGFloat initialAttitudeRoll;
+static CGFloat initialAttitudePitch;
+const CGFloat cameraDistance = 2.0;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Scene initialization
+    SCNView *sceneView = [[SCNView alloc] initWithFrame:self.view.frame];
+    //SceneKitView.backgroundColor = [UIColor blackColor];
+    sceneView.scene = [SCNScene scene];
+    [self.view addSubview:sceneView];
+    
+    SCNNode *centerNode = [SCNNode node];
+    centerNode.position = SCNVector3Zero;
+    [sceneView.scene.rootNode addChildNode:centerNode];
+    
+    // Camera
+    SCNCamera *camera = [SCNCamera camera];
+    camera.xFov = 20.0;
+    camera.yFov = 20.0;
+    
+    SCNNode *cameraNode = [SCNNode node];
+    cameraNode.camera = camera;
+    [sceneView.scene.rootNode addChildNode:cameraNode];
+    
+    cameraNode.constraints = @[[SCNLookAtConstraint lookAtConstraintWithTarget:centerNode]];
+    cameraNode.pivot = SCNMatrix4MakeTranslation(0, 0, -cameraDistance);
     
     // Motion manager
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
