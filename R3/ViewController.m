@@ -32,11 +32,6 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
 {
     [super viewDidLoad];
     
-    // Double tap
-    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clear)];
-    self.tapGesture.numberOfTapsRequired = 2;
-    [self.view addGestureRecognizer:self.tapGesture];
-    
     // Scene initialization
     self.sceneView = [[SCNView alloc] initWithFrame:self.view.frame];
     //SceneKitView.backgroundColor = [UIColor blackColor];
@@ -63,9 +58,8 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     self.motionManager = [[CMMotionManager alloc] init];
     
-    
     if (self.motionManager.deviceMotionAvailable) {
-        self.motionManager.deviceMotionUpdateInterval = 1.0 / 30.0;
+        self.motionManager.deviceMotionUpdateInterval = 1.0 / 60.0;
         [self.motionManager startDeviceMotionUpdatesToQueue:queue
                                                 withHandler:^(CMDeviceMotion * _Nullable deviceMotion, NSError * _Nullable error) {
             // Motion process
@@ -77,14 +71,23 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
             
             CGFloat deltaRoll = initialAttitudeRoll - deviceMotion.attitude.roll;
             CGFloat deltaPitch = (initialAttitudePitch - deviceMotion.attitude.pitch);
+            self.cameraNode.eulerAngles = SCNVector3Make(deltaPitch, deltaRoll, 0);
+            //NSLog(@"camera(x, y, z): (%.2f, %.2f, %.2f)", self.cameraNode.eulerAngles.x, self.cameraNode.eulerAngles.y, self.cameraNode.eulerAngles.z);
                                                     
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 // Update UI
-                self.cameraNode.eulerAngles = SCNVector3Make(deltaPitch, deltaRoll, 0);
-                //NSLog(@"camera(x, y, z): (%.2f, %.2f, %.2f)", self.cameraNode.eulerAngles.x, self.cameraNode.eulerAngles.y, self.cameraNode.eulerAngles.z);
+                
             }];
         }];
     }
+    
+    // Double tap
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clear)];
+    self.tapGesture.numberOfTapsRequired = 2;
+    [self.sceneView addGestureRecognizer:self.tapGesture];
+    
+    // Show statistics such as fps and timing information
+    self.sceneView.showsStatistics = YES;
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
