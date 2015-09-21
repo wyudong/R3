@@ -12,6 +12,7 @@
 
 @interface ViewController ()
 
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic, strong) CMMotionManager *motionManager;
 @property (nonatomic, strong) SCNView *sceneView;
 @property (nonatomic, strong) SCNNode *cameraNode;
@@ -30,6 +31,11 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Double tap
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clear)];
+    self.tapGesture.numberOfTapsRequired = 2;
+    [self.view addGestureRecognizer:self.tapGesture];
     
     // Scene initialization
     self.sceneView = [[SCNView alloc] initWithFrame:self.view.frame];
@@ -152,6 +158,15 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     
     self.currentDrawingNode = nil;
     self.currentDrawingLayer = nil;
+}
+
+- (void)clear
+{
+    [self.sceneView.scene.rootNode enumerateChildNodesUsingBlock:^(SCNNode * _Nonnull child, BOOL * _Nonnull stop) {
+        if (child.geometry != nil) {
+            [child removeFromParentNode];
+        }
+    }];
 }
 
 @end
