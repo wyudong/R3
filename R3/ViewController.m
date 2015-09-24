@@ -55,7 +55,7 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     self.cameraNode.pivot = SCNMatrix4MakeTranslation(0, 0, -kCameraDistance);
     
     // Motion manager
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    NSOperationQueue *queue = [NSOperationQueue mainQueue];
     self.motionManager = [[CMMotionManager alloc] init];
     
     if (self.motionManager.deviceMotionAvailable) {
@@ -63,21 +63,24 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
         [self.motionManager startDeviceMotionUpdatesToQueue:queue
                                                 withHandler:^(CMDeviceMotion * _Nullable deviceMotion, NSError * _Nullable error) {
             // Motion process
-            static dispatch_once_t once;
-            dispatch_once(&once, ^{
-                initialAttitudeRoll = deviceMotion.attitude.roll;
-                initialAttitudePitch = deviceMotion.attitude.pitch;
-            });
-            
-            CGFloat deltaRoll = initialAttitudeRoll - deviceMotion.attitude.roll;
-            CGFloat deltaPitch = (initialAttitudePitch - deviceMotion.attitude.pitch);
-            self.cameraNode.eulerAngles = SCNVector3Make(deltaPitch, deltaRoll, 0);
-            //NSLog(@"camera(x, y, z): (%.2f, %.2f, %.2f)", self.cameraNode.eulerAngles.x, self.cameraNode.eulerAngles.y, self.cameraNode.eulerAngles.z);
+//            static dispatch_once_t once;
+//            dispatch_once(&once, ^{
+//                initialAttitudeRoll = deviceMotion.attitude.roll;
+//                initialAttitudePitch = deviceMotion.attitude.pitch;
+//            });
+//            
+//            CGFloat deltaRoll = initialAttitudeRoll - deviceMotion.attitude.roll;
+//            CGFloat deltaPitch = initialAttitudePitch - deviceMotion.attitude.pitch;
+//            self.cameraNode.eulerAngles = SCNVector3Make(deltaPitch, deltaRoll, 0);
+//            NSLog(@"device(x, y): (%.2f, %.2f)", deviceMotion.attitude.roll, deviceMotion.attitude.pitch);
                                                     
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                // Update UI
-                
-            }];
+            CMQuaternion quaternion = self.motionManager.deviceMotion.attitude.quaternion;
+            CGFloat roll = atan2(2*(quaternion.y*quaternion.w - quaternion.x*quaternion.z), 1 - 2*quaternion.y*quaternion.y - 2*quaternion.z*quaternion.z);
+            CGFloat pitch = atan2(2*(quaternion.x*quaternion.w + quaternion.y*quaternion.z), 1 - 2*quaternion.x*quaternion.x - 2*quaternion.z*quaternion.z);
+            CGFloat yaw = asin(2*quaternion.x*quaternion.y + 2*quaternion.w*quaternion.z);
+
+            self.cameraNode.eulerAngles = SCNVector3Make(pitch, roll, yaw);
+//            NSLog(@"quaternion(x, y, z): (%.2f, %.2f, %.2f)", roll, pitch, yaw);
         }];
     }
     
