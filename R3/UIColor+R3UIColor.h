@@ -20,5 +20,6 @@
 + (UIColor *)deepSeaColor;
 + (UIColor *)purpleSkyColor;
 + (UIColor *)iceColor;
++ (UIColor *)randomColor;
 
 @end

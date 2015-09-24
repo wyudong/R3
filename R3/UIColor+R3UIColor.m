@@ -131,4 +131,33 @@
     return iceColor;
 }
 
++ (UIColor *)randomColor
+{
+    UIColor *randomColor = [UIColor whiteColor];
+    unsigned int colorIndex = arc4random_uniform(9);
+    
+    if (colorIndex == 0) {
+        randomColor = [UIColor redLipsColor];
+    } else if (colorIndex == 1) {
+        randomColor = [UIColor orangePeelColor];
+    } else if (colorIndex == 2) {
+        randomColor = [UIColor twinkleStarColor];
+    } else if (colorIndex == 3) {
+        randomColor = [UIColor greenLeafColor];
+    } else if (colorIndex == 4) {
+        randomColor = [UIColor greenPearColor];
+    } else if (colorIndex == 5) {
+        randomColor = [UIColor blueSeaColor];
+    } else if (colorIndex == 6) {
+        randomColor = [UIColor deepSeaColor];
+    } else if (colorIndex == 7) {
+        randomColor = [UIColor purpleSkyColor];
+    } else if (colorIndex == 8) {
+        randomColor = [UIColor iceColor];
+    }
+    NSLog(@"index: %d", colorIndex);
+    
+    return randomColor;
+}
+
 @end

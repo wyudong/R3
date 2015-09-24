@@ -19,6 +19,7 @@
 @property (nonatomic, strong) SCNNode *cameraNode;
 @property (nonatomic, strong) SCNNode *currentDrawingNode;
 @property (nonatomic, strong) CAShapeLayer *currentDrawingLayer;
+@property (nonatomic, strong) UIColor *strokeColor;
 
 @end
 
@@ -35,13 +36,15 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     
     // Scene initialization
     self.sceneView = [[SCNView alloc] initWithFrame:self.view.frame];
-    self.sceneView.backgroundColor = [UIColor blackColor];
+    self.sceneView.backgroundColor = [UIColor darkNightColor];
     self.sceneView.scene = [SCNScene scene];
     [self.view addSubview:self.sceneView];
     
     SCNNode *centerNode = [SCNNode node];
     centerNode.position = SCNVector3Zero;
     [self.sceneView.scene.rootNode addChildNode:centerNode];
+    
+    self.strokeColor = [UIColor randomColor];
     
     // Camera
     SCNCamera *camera = [SCNCamera camera];
@@ -110,7 +113,7 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
         currentDrawingNode.eulerAngles = self.cameraNode.eulerAngles;
         [self.sceneView.scene.rootNode addChildNode:currentDrawingNode];
         
-        currentDrawingLayer.strokeColor = [UIColor grayColor].CGColor;
+        currentDrawingLayer.strokeColor = self.strokeColor.CGColor;
         currentDrawingLayer.fillColor = nil;
         currentDrawingLayer.lineWidth = 5.0;
         currentDrawingLayer.lineJoin = kCALineJoinRound;
@@ -174,6 +177,8 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
             [child removeFromParentNode];
         }
     }];
+    
+    self.strokeColor = [UIColor randomColor];
 }
 
 @end
