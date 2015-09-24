@@ -89,7 +89,7 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     }
     
     // Double tap
-    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clear)];
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clearScreen)];
     self.tapGesture.numberOfTapsRequired = 2;
     [self.sceneView addGestureRecognizer:self.tapGesture];
     
@@ -170,7 +170,7 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     self.currentDrawingLayer = nil;
 }
 
-- (void)clear
+- (void)clearScreen
 {
     [self.sceneView.scene.rootNode enumerateChildNodesUsingBlock:^(SCNNode * _Nonnull child, BOOL * _Nonnull stop) {
         if (child.geometry != nil) {
@@ -179,6 +179,11 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     }];
     
     self.strokeColor = [UIColor randomColor];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 @end
