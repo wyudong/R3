@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "UIColor+R3UIColor.h"
 @import SceneKit;
 @import CoreMotion;
 
@@ -23,8 +24,8 @@
 
 @implementation ViewController
 
-static CGFloat initialAttitudeRoll;
-static CGFloat initialAttitudePitch;
+__unused static CGFloat initialAttitudeRoll;
+__unused static CGFloat initialAttitudePitch;
 const CGFloat kCameraDistance = 2.0;
 const CGFloat kCurrentDrawingLayerSize = 512.0;
 
@@ -34,7 +35,7 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     
     // Scene initialization
     self.sceneView = [[SCNView alloc] initWithFrame:self.view.frame];
-    //SceneKitView.backgroundColor = [UIColor blackColor];
+    self.sceneView.backgroundColor = [UIColor blackColor];
     self.sceneView.scene = [SCNScene scene];
     [self.view addSubview:self.sceneView];
     
