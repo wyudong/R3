@@ -94,7 +94,7 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     [self.sceneView addGestureRecognizer:self.tapGesture];
     
     // Show statistics such as fps and timing information
-    self.sceneView.showsStatistics = YES;
+    //self.sceneView.showsStatistics = YES;
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
