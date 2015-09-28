@@ -155,7 +155,6 @@
     } else if (colorIndex == 8) {
         randomColor = [UIColor iceColor];
     }
-    NSLog(@"index: %d", colorIndex);
     
     return randomColor;
 }

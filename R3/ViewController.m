@@ -108,7 +108,6 @@ const CGFloat kCurrentDrawingLayerSize = 512.0;
     CAShapeLayer *currentDrawingLayer = self.currentDrawingLayer;
     
     if (currentDrawingLayer && currentDrawingNode) {
-        NSLog(@"began");
         currentDrawingNode.position = SCNVector3Zero;
         currentDrawingNode.eulerAngles = self.cameraNode.eulerAngles;
         [self.sceneView.scene.rootNode addChildNode:currentDrawingNode];
